@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Previsualizacion - Ingecon Document Studio</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #E5E7EB; font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; padding: 30px 0; }
+#toolbar { position: fixed; top: 10px; right: 20px; z-index: 1000; display: flex; gap: 10px; align-items: center; }
+#status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+#page-container { display: flex; flex-direction: column; gap: 30px; width: 100%; max-width: 735px; }
+
+.pagina {
+    width: 595px; margin: 0 auto; background: white;
+    min-height: 793px;
+    padding: 70px; box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+    page-break-after: always;
+    position: relative;
+}
+.pagina .num-pagina {
+    position: absolute; bottom: 40px; right: 70px;
+    font-family: Arial; font-size: 12pt; color: #666;
+}
+
+h1.capitulo {
+    font-family: Arial; font-size: 12pt; font-weight: bold;
+    text-transform: uppercase; text-align: left;
+    margin-top: 30px; margin-bottom: 12px;
+}
+h2.subtitulo {
+    font-family: Arial; font-size: 12pt; font-weight: bold;
+    text-align: left; margin-left: 1.25cm; margin-bottom: 8px;
+}
+p.texto-libre {
+    font-family: Arial; font-size: 12pt; line-height: 1.5;
+    text-align: justify; margin-bottom: 6px;
+}
+dl.definicion { margin-bottom: 12px; }
+dl.definicion dt { font-family: Arial; font-size: 12pt; font-weight: bold; margin-bottom: 4px; }
+dl.definicion dd { font-family: Arial; font-size: 12pt; line-height: 1.5; text-align: justify; }
+
+figure { margin: 16px 0; text-align: center; }
+figure figcaption { font-family: Arial; font-size: 9pt; text-align: center; margin-bottom: 8px; font-style: italic; }
+figure .img-placeholder {
+    display: flex; align-items: center; justify-content: center;
+    width: 80%; height: 120px; margin: 8px auto;
+    background: #DBEAFE; border: 2px dashed #93C5FD; border-radius: 6px;
+    font-family: Arial; font-size: 10pt; color: #1E40AF;
+}
+figure .fuente {
+    font-family: Arial; font-size: 9pt; text-align: center;
+    line-height: 1.0; color: #444;
+}
+
+.tabla-wrapper { margin: 12px 0; }
+.tabla-wrapper table { width: 100%; border-collapse: collapse; font-family: Arial; font-size: 12pt; }
+.tabla-wrapper caption {
+    font-family: Arial; font-size: 9pt; text-align: center;
+    font-style: italic; caption-side: top; margin-bottom: 6px;
+}
+.tabla-wrapper thead th {
+    background: #D9D9D9; font-weight: bold; padding: 4px 6px;
+    border: 1px solid #999; text-align: center; font-size: 12pt;
+}
+.tabla-wrapper tbody td {
+    padding: 4px 6px; border: 1px solid #999; font-size: 12pt;
+}
+.tabla-wrapper .fuente-tabla {
+    font-family: Arial; font-size: 9pt; text-align: center;
+    line-height: 1.0; color: #444; margin-top: 4px;
+}
+
+table.caso-uso { width: 100%; border-collapse: collapse; font-family: Arial; font-size: 12pt; margin: 12px 0; }
+table.caso-uso caption {
+    font-family: Arial; font-size: 9pt; text-align: center;
+    font-style: italic; caption-side: top; margin-bottom: 6px;
+}
+table.caso-uso td { padding: 4px 6px; border: 1px solid #999; }
+table.caso-uso td.campo { background: #F2F2F2; font-weight: bold; width: 30%; font-size: 12pt; }
+table.caso-uso td.valor { font-size: 12pt; }
+
+table.matriz-ur-esa { width: 100%; border-collapse: collapse; font-family: Arial; font-size: 8pt; margin: 12px 0; }
+table.matriz-ur-esa caption {
+    font-family: Arial; font-size: 9pt; text-align: center;
+    font-style: italic; caption-side: top; margin-bottom: 6px;
+}
+table.matriz-ur-esa th { background: #D9D9D9; font-weight: bold; padding: 2px 3px; border: 1px solid #999; text-align: center; font-size: 8pt; }
+table.matriz-ur-esa td { padding: 2px 3px; border: 1px solid #999; font-size: 8pt; }
+table.matriz-ur-esa td.cat-nom { background: #F2F2F2; font-weight: bold; }
+table.matriz-ur-esa td.cat-idx { font-weight: bold; }
+
+p.apa-ref {
+    font-family: Arial; font-size: 12pt; text-align: left;
+    line-height: 1.0; margin-left: 1.25cm; text-indent: -1.25cm;
+    padding-left: 1.25cm; margin-bottom: 6px;
+}
+
+@media print {
+    body { background: white; padding: 0; }
+    .pagina { box-shadow: none; margin: 0; page-break-after: always; }
+    #toolbar { display: none; }
+}
+</style>
+</head>
+<body>
+<div id="toolbar">
+    <span id="status-dot" style="background:#F59E0B" title="Conectando..."></span>
+    <span id="status-text" style="font-family:Arial;font-size:11pt;color:#374151">Conectando...</span>
+</div>
+<div id="page-container"></div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const DOC_ID = params.get("doc") || "proyecto1";
+const WS_URL = `ws://${location.host}/ws/${DOC_ID}`;
+
+const statusDot = document.getElementById("status-dot");
+const statusText = document.getElementById("status-text");
+const container = document.getElementById("page-container");
+
+let elementos = [];
+let ws = null;
+
+function setStatus(ok, msg) {
+    statusDot.style.background = ok ? "#10B981" : "#EF4444";
+    statusText.textContent = msg;
+}
+
+function connect() {
+    setStatus(false, "Conectando...");
+    ws = new WebSocket(WS_URL);
+    ws.onopen = function() { setStatus(true, "Conectado"); };
+    ws.onclose = function() { setStatus(false, "Desconectado. Reconectando..."); setTimeout(connect, 2000); };
+    ws.onerror = function() { setStatus(false, "Error de conexion"); };
+    ws.onmessage = function(evt) {
+        try {
+            const data = JSON.parse(evt.data);
+            handleMessage(data);
+        } catch(e) { console.error("Error parseando mensaje:", e); }
+    };
+}
+
+function handleMessage(data) {
+    const tipo = data.tipo;
+    if (tipo === "estado_completo") {
+        elementos = data.elementos || [];
+        render();
+    } else if (tipo === "agregar_bloque") {
+        const idx = data.idx;
+        if (idx != null && idx <= elementos.length) {
+            elementos.splice(idx, 0, data.bloque);
+        } else {
+            elementos.push(data.bloque);
+        }
+        render();
+    } else if (tipo === "actualizar_bloque") {
+        const idx = data.idx;
+        if (idx >= 0 && idx < elementos.length) {
+            elementos[idx] = data.bloque;
+        }
+        render();
+    } else if (tipo === "eliminar_bloque") {
+        const idx = data.idx;
+        if (idx >= 0 && idx < elementos.length) {
+            elementos.splice(idx, 1);
+        }
+        render();
+    } else if (tipo === "mover_bloque") {
+        const ori = data.idx_origen;
+        const dest = data.idx_destino;
+        if (ori >= 0 && ori < elementos.length && dest >= 0 && dest < elementos.length) {
+            const item = elementos.splice(ori, 1)[0];
+            elementos.splice(dest, 0, item);
+        }
+        render();
+    }
+}
+
+function render() {
+    container.innerHTML = "";
+    if (elementos.length === 0) {
+        container.innerHTML = '<div class="pagina"><p style="text-align:center;color:#9CA3AF;font-family:Arial;font-size:12pt;padding-top:300px">El documento esta vacio.</p></div>';
+        return;
+    }
+
+    let capNum = 0, subNum = 0, tabNum = 0, figNum = 0;
+    let currentPage = newPage();
+
+    for (let i = 0; i < elementos.length; i++) {
+        const blk = elementos[i];
+        const m = blk.metodo;
+        const args = blk.args || {};
+
+        if (m === "capitulo") {
+            capNum++; subNum = 0; tabNum = 0; figNum = 0;
+            const h1 = ce("h1", "capitulo");
+            h1.textContent = capNum + ". " + (args.titulo || "").toUpperCase();
+            currentPage.appendChild(h1);
+            currentPage.appendChild(ce("br"));
+            currentPage.appendChild(ce("br"));
+        } else if (m === "subtitulo") {
+            subNum++;
+            const h2 = ce("h2", "subtitulo");
+            h2.textContent = capNum + "." + subNum + " " + (args.subtitulo || "");
+            currentPage.appendChild(h2);
+            currentPage.appendChild(ce("br"));
+        } else if (m === "texto") {
+            const p = ce("p", "texto-libre");
+            p.textContent = args.texto || "";
+            currentPage.appendChild(p);
+            currentPage.appendChild(ce("br"));
+        } else if (m === "definicion") {
+            const dl = ce("dl", "definicion");
+            const dt = ce("dt"); dt.textContent = args.termino || "";
+            const dd = ce("dd"); dd.textContent = args.descripcion || "";
+            dl.appendChild(dt); dl.appendChild(dd);
+            currentPage.appendChild(dl);
+        } else if (m === "figura") {
+            figNum++;
+            const fig = ce("figure");
+            const cap = ce("figcaption");
+            cap.textContent = "Figura " + capNum + "." + figNum + " \"" + (args.leyenda || "") + "\".";
+            fig.appendChild(cap);
+            const div = ce("div", "img-placeholder");
+            div.textContent = "[ IMAGEN: " + (args.ruta_imagen || "sin ruta") + " ]";
+            fig.appendChild(div);
+            const fuente = ce("p", "fuente");
+            fuente.textContent = "Fuente: Elaborado por el estudiante de acuerdo con el proyecto.";
+            fig.appendChild(fuente);
+            currentPage.appendChild(fig);
+        } else if (m === "tabla_simple") {
+            tabNum++;
+            const wrap = ce("div", "tabla-wrapper");
+            const cap = ce("caption");
+            cap.textContent = "Tabla " + capNum + "." + tabNum + ": \"" + (args.leyenda || "") + "\".";
+            const table = ce("table");
+            table.appendChild(cap);
+            const thead = ce("thead");
+            const trh = ce("tr");
+            (args.encabezados || []).forEach(function(h) {
+                const th = ce("th"); th.textContent = h; trh.appendChild(th);
+            });
+            thead.appendChild(trh); table.appendChild(thead);
+            const tbody = ce("tbody");
+            (args.filas || []).forEach(function(fila) {
+                const tr = ce("tr");
+                fila.forEach(function(d) { const td = ce("td"); td.textContent = d; tr.appendChild(td); });
+                tbody.appendChild(tr);
+            });
+            table.appendChild(tbody); wrap.appendChild(table);
+            const fuente = ce("p", "fuente-tabla");
+            fuente.textContent = "Fuente: Elaborado por el estudiante de acuerdo con el proyecto.";
+            wrap.appendChild(fuente);
+            currentPage.appendChild(wrap);
+        } else if (m === "caso_uso") {
+            tabNum++;
+            const capText = "Tabla " + capNum + "." + tabNum + " CU: \"" + (args.nombre || "") + "\".";
+            const table = ce("table", "caso-uso");
+            const cap = ce("caption"); cap.textContent = capText; table.appendChild(cap);
+            const campos = [
+                ["Nombre", args.nombre || ""], ["Actor(es)", args.actores || ""],
+                ["Resumen", args.resumen || ""], ["Frecuencia", args.frecuencia || ""],
+                ["Precondiciones", args.precondiciones || ""], ["Descripcion", args.descripcion || ""],
+                ["Excepciones", args.excepciones || ""], ["Poscondiciones", args.poscondiciones || ""],
+                ["Dependencias", args.dependencias || ""]
+            ];
+            campos.forEach(function(pair) {
+                const tr = ce("tr");
+                const tdC = ce("td", "campo"); tdC.textContent = pair[0];
+                const tdV = ce("td", "valor"); tdV.textContent = pair[1];
+                tr.appendChild(tdC); tr.appendChild(tdV); table.appendChild(tr);
+            });
+            currentPage.appendChild(table);
+            const fuente = ce("p", "fuente-tabla");
+            fuente.textContent = "Fuente: Elaborado por el estudiante de acuerdo con el proyecto.";
+            currentPage.appendChild(fuente);
+        } else if (m === "matriz_ur_esa") {
+            tabNum++;
+            const cats = args.categorias || [];
+            const capText = "Tabla " + capNum + "." + tabNum + " \"Requerimientos funcionales formato ESA\".";
+            const table = ce("table", "matriz-ur-esa");
+            const cap = ce("caption"); cap.textContent = capText; table.appendChild(cap);
+            const thead = ce("thead"); const trh = ce("tr");
+            ["", "ID", "Descripcion", "Nec", "Prio", "Est", "Cla", "Ver", "Fue"].forEach(function(h) {
+                const th = ce("th"); th.textContent = h; trh.appendChild(th);
+            });
+            thead.appendChild(trh); table.appendChild(thead);
+            const tbody = ce("tbody");
+            cats.forEach(function(cat, ci) {
+                const trC = ce("tr");
+                const tdIdx = ce("td", "cat-idx"); tdIdx.textContent = (ci + 1) + ".";
+                trC.appendChild(tdIdx);
+                trC.appendChild(ce("td"));
+                const tdNom = ce("td", "cat-nom"); tdNom.colSpan = 7; tdNom.textContent = cat.nombre || "";
+                trC.appendChild(tdNom); tbody.appendChild(trC);
+                (cat.reqs || []).forEach(function(req) {
+                    const trR = ce("tr");
+                    const tdT = ce("td"); tdT.textContent = req.tipo || "UR"; tdT.style.fontWeight = "bold"; tdT.style.textAlign = "center";
+                    const tdId = ce("td"); tdId.textContent = req.id || ""; tdId.style.fontWeight = "bold"; tdId.style.textAlign = "center";
+                    const tdNm = ce("td"); tdNm.textContent = req.nombre || ""; tdNm.style.fontWeight = "bold"; tdNm.style.textAlign = "center";
+                    trR.appendChild(tdT); trR.appendChild(tdId); trR.appendChild(tdNm);
+                    (req.puntos || []).slice(0, 6).forEach(function(p) {
+                        const td = ce("td"); td.textContent = p; td.style.textAlign = "center"; trR.appendChild(td);
+                    });
+                    for (let j = (req.puntos || []).length; j < 6; j++) {
+                        trR.appendChild(ce("td"));
+                    }
+                    tbody.appendChild(trR);
+                    const trD = ce("tr");
+                    trD.appendChild(ce("td"));
+                    const tdD = ce("td"); tdD.colSpan = 8; tdD.textContent = req.descripcion || ""; tdD.style.textAlign = "justify";
+                    trD.appendChild(tdD); tbody.appendChild(trD);
+                });
+            });
+            table.appendChild(tbody);
+            currentPage.appendChild(table);
+            const fuente = ce("p", "fuente-tabla");
+            fuente.textContent = "Fuente: Elaborado por el estudiante de acuerdo con el proyecto.";
+            currentPage.appendChild(fuente);
+        } else if (m === "apa") {
+            const h1 = ce("h1", "capitulo");
+            h1.textContent = "REFERENCIAS BIBLIOGRAFICAS";
+            currentPage.appendChild(h1);
+            currentPage.appendChild(ce("br"));
+            (args.lista_referencias || []).forEach(function(ref) {
+                const p = ce("p", "apa-ref"); p.textContent = ref;
+                currentPage.appendChild(p);
+            });
+        }
+    }
+}
+
+function newPage() {
+    const pag = ce("div", "pagina");
+    const num = ce("div", "num-pagina");
+    num.textContent = document.querySelectorAll(".pagina").length + 1;
+    pag.appendChild(num);
+    container.appendChild(pag);
+    return pag;
+}
+
+function ce(tag, cls) {
+    const el = document.createElement(tag);
+    if (cls) el.className = cls;
+    return el;
+}
+
+connect();
+</script>
+</body>
+</html>
