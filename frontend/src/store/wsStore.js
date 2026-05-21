@@ -32,7 +32,21 @@ export const wsStore = create((set, get) => ({
           const store = useDocumentStore.getState();
 
           if (data.tipo === "estado_completo") {
-            store.reemplazarElementos(data.elementos || []);
+            const serverElements = data.elementos || [];
+            if (serverElements.length > 0) {
+              store.reemplazarElementos(serverElements);
+            } else {
+              const local = useDocumentStore.getState().elementos;
+              if (local.length > 0) {
+                local.forEach((el, i) => {
+                  get().send({
+                    tipo: "agregar_bloque",
+                    idx: i,
+                    bloque: { metodo: el.metodo, args: el.args },
+                  });
+                });
+              }
+            }
           } else if (data.tipo === "agregar_bloque") {
             const { idx, bloque } = data;
             const prev = useDocumentStore.getState().elementos;

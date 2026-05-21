@@ -1,11 +1,10 @@
-import {
-  Menu,
-  BookOpen,
-  Eye,
-} from "lucide-react";
+import { Menu, BookOpen } from "lucide-react";
 import { StatusBadge } from "../shared/StatusBadge";
+import { PreviewPDFButton } from "../preview/PreviewPDFButton";
 
 export function TopBar({ currentPage, onMenuClick, onNavigate, navItems }) {
+  const isPreview = currentPage === "preview";
+
   return (
     <header className="h-14 bg-white border-b border-gray-200 flex items-center px-4 gap-4 shrink-0">
       <button
@@ -37,7 +36,8 @@ export function TopBar({ currentPage, onMenuClick, onNavigate, navItems }) {
         ))}
       </div>
 
-      <div className="ml-auto">
+      <div className="ml-auto flex items-center gap-2">
+        {isPreview && <PreviewPDFButton />}
         <StatusBadge />
       </div>
     </header>

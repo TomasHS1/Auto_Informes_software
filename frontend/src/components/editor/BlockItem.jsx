@@ -4,6 +4,7 @@ import { CSS } from "@dnd-kit/utilities";
 import {
   GripVertical,
   Pencil,
+  Copy,
   Trash2,
   BookOpen,
   Indent,
@@ -55,6 +56,7 @@ function resumenBloque(bloque) {
 }
 
 export function BlockItem({ bloque, index }) {
+  const addBloque = useDocumentStore((s) => s.addBloque);
   const removeBloque = useDocumentStore((s) => s.removeBloque);
   const [editOpen, setEditOpen] = useState(false);
   const meta = metaBloques[bloque.metodo] || metaBloques.texto;
@@ -78,6 +80,10 @@ export function BlockItem({ bloque, index }) {
   const handleEdit = () => {
     if (!meta.Dialog) return;
     setEditOpen(true);
+  };
+
+  const handleDuplicate = () => {
+    addBloque(bloque.metodo, structuredClone(bloque.args));
   };
 
   return (
@@ -117,6 +123,13 @@ export function BlockItem({ bloque, index }) {
               <Pencil size={16} />
             </button>
           )}
+          <button
+            onClick={handleDuplicate}
+            className="p-2 rounded-lg hover:bg-blue-50 text-blue-400 hover:text-blue-600 transition-colors"
+            title="Duplicar"
+          >
+            <Copy size={16} />
+          </button>
           <button
             onClick={() => removeBloque(bloque.id)}
             className="p-2 rounded-lg hover:bg-red-50 text-red-400 hover:text-red-600 transition-colors"
