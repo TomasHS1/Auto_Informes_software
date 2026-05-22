@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { useDocumentStore } from "./documentStore";
+import { wsUrl } from "../lib/api";
 
 export const wsStore = create((set, get) => ({
   status: "disconnected",
@@ -17,7 +18,7 @@ export const wsStore = create((set, get) => ({
     set({ status: "connecting", documentoId: docId, socket: null });
 
     try {
-      const ws = new WebSocket(`ws://localhost:8000/ws/${docId}`);
+      const ws = new WebSocket(wsUrl(docId));
       set({ socket: ws });
 
       ws.onopen = () => {

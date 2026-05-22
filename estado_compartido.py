@@ -1,8 +1,27 @@
 import json
+import os
 import sys
 from collections import defaultdict
 
-_estado = defaultdict(list)
+ARCHIVO_ESTADO = "estado_documentos.json"
+
+
+def _cargar():
+    if os.path.exists(ARCHIVO_ESTADO):
+        try:
+            with open(ARCHIVO_ESTADO, "r", encoding="utf-8") as f:
+                return defaultdict(list, json.load(f))
+        except Exception:
+            pass
+    return defaultdict(list)
+
+
+def _guardar(estado):
+    with open(ARCHIVO_ESTADO, "w", encoding="utf-8") as f:
+        json.dump(dict(estado), f, ensure_ascii=False, indent=2)
+
+
+_estado = _cargar()
 _clientes = defaultdict(set)
 
 
@@ -12,6 +31,7 @@ def obtener_estado(documento_id: str) -> list:
 
 def establecer_estado(documento_id: str, elementos: list) -> None:
     _estado[documento_id] = elementos
+    _guardar(_estado)
 
 
 def agregar_cliente(documento_id: str, websocket) -> None:

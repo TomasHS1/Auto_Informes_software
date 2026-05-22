@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Download, Loader2 } from "lucide-react";
 import { useDocumentStore } from "../../store/documentStore";
+import { apiUrl } from "../../lib/api";
 
 export function ExportButton() {
   const { portada, elementos } = useDocumentStore();
@@ -29,7 +30,7 @@ export function ExportButton() {
         elementos: elementos.map(({ metodo, args }) => ({ metodo, args })),
       };
 
-      const res = await fetch("http://localhost:8000/compilar", {
+      const res = await fetch(apiUrl("/compilar"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),

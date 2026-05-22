@@ -1,11 +1,13 @@
 import { FileText } from "lucide-react";
+import { apiUrl } from "../../lib/api";
 
 export function PreviewPDFButton() {
   const handlePreviewPDF = async () => {
+    const url = apiUrl("/preview-html?doc=proyecto1");
     try {
-      const res = await fetch("http://localhost:8000/preview-html?doc=proyecto1");
+      const res = await fetch(url);
       if (res.ok) {
-        window.open("http://localhost:8000/preview-html?doc=proyecto1", "_blank");
+        window.open(url, "_blank");
       }
     } catch (e) {
       alert("Error al abrir preview: " + e.message);

@@ -1,0 +1,71 @@
+{
+  "proyecto1": [
+    {
+      "metodo": "capitulo",
+      "args": {
+        "titulo": "josep holahola"
+      }
+    },
+    {
+      "metodo": "subtitulo",
+      "args": {
+        "subtitulo": "Prueba 1",
+        "texto": ""
+      }
+    },
+    {
+      "metodo": "texto",
+      "args": {
+        "texto": "Mmmm mmmmmmhhh🫪",
+        "negrita": false,
+        "cursiva": true
+      }
+    },
+    {
+      "metodo": "capitulo",
+      "args": {
+        "titulo": "Requerimientos del Sistema"
+      }
+    },
+    {
+      "metodo": "caso_uso",
+      "args": {
+        "nombre": "CU-01: Iniciar Sesion",
+        "actores": "Administrador",
+        "resumen": "Permite acceder a la plataforma.",
+        "frecuencia": "Alta",
+        "precondiciones": "Usuario registrado",
+        "descripcion": "1. Ingresar credenciales.\n2. Validar en BD.",
+        "excepciones": "Error 401",
+        "poscondiciones": "Acceso al panel",
+        "dependencias": "Ninguna"
+      }
+    },
+    {
+      "metodo": "matriz_ur_esa",
+      "args": {
+        "categorias": [
+          {
+            "nombre": "Formulario de Contacto: Visitante",
+            "reqs": [
+              {
+                "tipo": "UR",
+                "id": "1.1",
+                "nombre": "Enviar Consulta",
+                "puntos": [
+                  "1",
+                  "1",
+                  "1",
+                  "1",
+                  "1",
+                  "1"
+                ],
+                "descripcion": "El sistema debe permitir al Visitante enviar una Consulta de contacto..."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

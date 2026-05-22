@@ -2,9 +2,11 @@ import json
 import sys
 import traceback
 import io
+import os
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Body
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, StreamingResponse
+from fastapi.staticfiles import StaticFiles
 from estado_compartido import (
     obtener_estado,
     establecer_estado,
@@ -23,6 +25,15 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+DIST_PATH = os.path.join(os.path.dirname(__file__), "frontend", "dist")
+if os.path.exists(DIST_PATH):
+    app.mount("/assets", StaticFiles(directory=os.path.join(DIST_PATH, "assets")), name="assets")
+
+    @app.get("/")
+    async def root():
+        with open(os.path.join(DIST_PATH, "index.html"), "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
 
 
 @app.get("/status")

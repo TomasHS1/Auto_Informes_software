@@ -1,0 +1,8 @@
+﻿npm warn exec The following package was not found and will be installed: localtunnel@2.0.2
+En C:\Program Files\nodejs\npx.ps1: 30 Carácter: 3
++   & $NODE_EXE $NPX_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (npm warn exec T...caltunnel@2.0.2:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+your url is: https://strong-berries-brake.loca.lt
