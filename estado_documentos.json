@@ -3,42 +3,14 @@
     {
       "metodo": "capitulo",
       "args": {
-        "titulo": "josep holahola"
+        "titulo": "holaaa editado por tomas"
       }
     },
     {
       "metodo": "subtitulo",
       "args": {
-        "subtitulo": "Prueba 1",
-        "texto": ""
-      }
-    },
-    {
-      "metodo": "texto",
-      "args": {
-        "texto": "Mmmm mmmmmmhhh🫪",
-        "negrita": false,
-        "cursiva": true
-      }
-    },
-    {
-      "metodo": "capitulo",
-      "args": {
-        "titulo": "Requerimientos del Sistema"
-      }
-    },
-    {
-      "metodo": "caso_uso",
-      "args": {
-        "nombre": "CU-01: Iniciar Sesion",
-        "actores": "Administrador",
-        "resumen": "Permite acceder a la plataforma.",
-        "frecuencia": "Alta",
-        "precondiciones": "Usuario registrado",
-        "descripcion": "1. Ingresar credenciales.\n2. Validar en BD.",
-        "excepciones": "Error 401",
-        "poscondiciones": "Acceso al panel",
-        "dependencias": "Ninguna"
+        "subtitulo": "Requerimientos Funcionales ",
+        "texto": "Aqui estan los RF matriz ESA"
       }
     },
     {
@@ -46,25 +18,194 @@
       "args": {
         "categorias": [
           {
-            "nombre": "Formulario de Contacto: Visitante",
+            "nombre": "categoria1",
             "reqs": [
               {
                 "tipo": "UR",
-                "id": "1.1",
-                "nombre": "Enviar Consulta",
+                "id": "a",
+                "nombre": "s",
                 "puntos": [
-                  "1",
-                  "1",
-                  "1",
-                  "1",
-                  "1",
-                  "1"
+                  "d",
+                  "2",
+                  "4",
+                  "2",
+                  "3",
+                  "f"
                 ],
-                "descripcion": "El sistema debe permitir al Visitante enviar una Consulta de contacto..."
+                "descripcion": "sfd"
+              },
+              {
+                "tipo": "UR",
+                "id": "",
+                "nombre": "",
+                "puntos": [
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  ""
+                ],
+                "descripcion": ""
+              }
+            ]
+          },
+          {
+            "nombre": "categoria2",
+            "reqs": [
+              {
+                "tipo": "UR",
+                "id": "3",
+                "nombre": "4",
+                "puntos": [
+                  "f",
+                  "f",
+                  "f",
+                  "r",
+                  "jk",
+                  ""
+                ],
+                "descripcion": "d"
               }
             ]
           }
         ]
+      }
+    },
+    {
+      "metodo": "subtitulo",
+      "args": {
+        "subtitulo": "Caso de uso",
+        "texto": "Aqui estan los casos de uso"
+      }
+    },
+    {
+      "metodo": "texto",
+      "args": {
+        "texto": "Aqui se presentan los CU",
+        "negrita": false,
+        "cursiva": false
+      }
+    },
+    {
+      "metodo": "caso_uso",
+      "args": {
+        "nombre": "Enviando consulta",
+        "actores": "Visitante",
+        "resumen": "Permite al visitante enviar un Formulario de Contacto a través de la página web, asegurando que la información sea registrada en la Base de Datos. ",
+        "frecuencia": "Cada vez que el Visitante ingrese sus datos en el Formulario de Contacto y los envíe. ",
+        "precondiciones": "El visitante se encuentra en la página de inicio del sitio web. ",
+        "descripcion": "El sistema presenta el Formulario de Contacto [Excepción 1], el Visitante ingresa los datos solicitados y envía el Formulario de Contacto [Excepción 2], el sistema valida la información recibida [Excepción 3] y registra la consulta en la Base de Datos emitiendo un mensaje de confirmación para el Visitante. ",
+        "excepciones": "Excepción 1: El sistema no logra cargar el Formulario de Contacto. El sistema informa al visitante que el servicio no está disponible por el momento. Excepción 2: El Usuario no ingresa todos los datos solicitados por el Formulario de Contacto. El sistema informa que faltan datos por rellenar. El Usuario ingresa los datos faltantes. Excepción 3: Los datos ingresados no son válidos. El sistema informa que hay datos inválidos. El Usuario ingresa los datos con el formato solicitado. ",
+        "poscondiciones": "La consulta queda registrada en la Base de Datos. ",
+        "dependencias": "La consulta queda registrada en la Base de Datos. "
+      }
+    },
+    {
+      "metodo": "capitulo",
+      "args": {
+        "titulo": "Diagrama de clases"
+      }
+    },
+    {
+      "metodo": "figura",
+      "args": {
+        "ruta_imagen": "uploads/db34facf47614a97933bbf636648ae0a.png",
+        "leyenda": "Diagrama de clases del modelo relacional"
+      }
+    },
+    {
+      "metodo": "texto",
+      "args": {
+        "texto": "Aqui se presenta la matriz",
+        "negrita": false,
+        "cursiva": false
+      }
+    },
+    {
+      "metodo": "capitulo",
+      "args": {
+        "titulo": "Planificación"
+      }
+    },
+    {
+      "metodo": "texto",
+      "args": {
+        "texto": "Aqui se presenta la carta gantt ",
+        "negrita": false,
+        "cursiva": false
+      }
+    },
+    {
+      "metodo": "tabla_simple",
+      "args": {
+        "leyenda": "Carta Gantt",
+        "color_encabezado": "D9D9D9",
+        "encabezados": [
+          "ID",
+          "Tarea",
+          "Estado"
+        ],
+        "filas": [
+          [
+            "Paulina",
+            "Base de datos",
+            "En proceso"
+          ],
+          [
+            "Benjamin",
+            "Componentes",
+            "Completado"
+          ],
+          [
+            "Tomas",
+            "Secuencia y Despliegue",
+            "Completado"
+          ],
+          [
+            "Vicente",
+            "Bizagi y formato",
+            "Completado"
+          ],
+          [
+            "Diego Solar",
+            "-",
+            "No asignado"
+          ],
+          [
+            "Diego Carabajal",
+            "Informe incremento 1",
+            "En proceso"
+          ]
+        ]
+      }
+    },
+    {
+      "metodo": "capitulo",
+      "args": {
+        "titulo": "Anexo"
+      }
+    },
+    {
+      "metodo": "apa",
+      "args": {
+        "lista_referencias": [
+          "Referencia APA..."
+        ]
+      }
+    },
+    {
+      "metodo": "subtitulo",
+      "args": {
+        "subtitulo": "Curriculums",
+        "texto": "Aqui estan los curriculums de los estudiantes"
+      }
+    },
+    {
+      "metodo": "subtitulo",
+      "args": {
+        "subtitulo": "Requerimientos Funcionales ",
+        "texto": "Aqui estan los RF matriz ESA"
       }
     }
   ]

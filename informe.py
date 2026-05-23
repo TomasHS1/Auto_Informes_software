@@ -113,25 +113,38 @@ class GeneradorInforme:
             p_logo.add_run().add_picture(ruta_final_logo, width=Cm(4.5))
 
         p_inst = self.doc.add_paragraph(); p_inst.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        p_inst.add_run(f"{facultad}\n{curso}")
-        
-        self.doc.add_paragraph() 
+        r = p_inst.add_run(facultad)
+        r.add_break()
+        r.add_text(curso)
+
+        self.doc.add_paragraph()
         p_tit = self.doc.add_paragraph(); p_tit.alignment = WD_ALIGN_PARAGRAPH.CENTER
         p_tit.add_run(self.titulo).bold = True
-        
+
         self.doc.add_paragraph()
         p_aut = self.doc.add_paragraph(); p_aut.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        p_aut.add_run("Autores:\n")
-        for autor in sorted(autores, key=lambda x: x.split()[-2]):
-            p_aut.add_run(f"{autor}\n")
-            
+        r = p_aut.add_run("Autores:")
+        r.add_break()
+        autores_limpios = [a.strip() for a in autores if a and a.strip()]
+        if autores_limpios:
+            def _clave_orden(a):
+                partes = a.split()
+                return partes[-2].lower() if len(partes) >= 2 else a.lower()
+            for autor in sorted(autores_limpios, key=_clave_orden):
+                r = p_aut.add_run(autor)
+                r.add_break()
+
         self.doc.add_paragraph()
         p_prof = self.doc.add_paragraph(); p_prof.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        p_prof.add_run(f"Profesor:\n{profesor}")
-        
+        r = p_prof.add_run("Profesor:")
+        r.add_break()
+        r.add_text(profesor)
+
         self.doc.add_paragraph()
         p_pie = self.doc.add_paragraph(); p_pie.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        p_pie.add_run(f"{ciudad}, Chile\n{anio}")
+        r = p_pie.add_run(f"{ciudad}, Chile")
+        r.add_break()
+        r.add_text(anio)
 
     def estructurar_indices(self):
         for titulo, xml in [

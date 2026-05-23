@@ -3,7 +3,8 @@ import sys
 import traceback
 import io
 import os
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Body
+import uuid
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Body, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
@@ -26,7 +27,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-DIST_PATH = os.path.join(os.path.dirname(__file__), "frontend", "dist")
+BASEDIR = os.path.dirname(__file__)
+UPLOADS_DIR = os.path.join(BASEDIR, "uploads")
+os.makedirs(UPLOADS_DIR, exist_ok=True)
+
+DIST_PATH = os.path.join(BASEDIR, "frontend", "dist")
 if os.path.exists(DIST_PATH):
     app.mount("/assets", StaticFiles(directory=os.path.join(DIST_PATH, "assets")), name="assets")
 
@@ -35,10 +40,60 @@ if os.path.exists(DIST_PATH):
         with open(os.path.join(DIST_PATH, "index.html"), "r", encoding="utf-8") as f:
             return HTMLResponse(content=f.read())
 
+if os.path.exists(UPLOADS_DIR):
+    app.mount("/uploads", StaticFiles(directory=UPLOADS_DIR), name="uploads")
+
 
 @app.get("/status")
 async def status():
     return {"status": "ok", "clientes_conectados": contar_clientes()}
+
+
+EXTENSIONES_PERMITIDAS = {".png", ".jpg", ".jpeg", ".gif", ".bmp", ".webp", ".svg"}
+TAMANO_MAXIMO_MB = 10
+
+
+@app.post("/upload")
+async def upload_imagen(file: UploadFile = File(...)):
+    ext = os.path.splitext(file.filename or "img.png")[1].lower()
+
+    if ext not in EXTENSIONES_PERMITIDAS:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Extension no permitida: {ext}. Solo imagenes: {', '.join(sorted(EXTENSIONES_PERMITIDAS))}",
+        )
+
+    contenido = await file.read()
+
+    if len(contenido) > TAMANO_MAXIMO_MB * 1024 * 1024:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Imagen demasiado grande. Maximo {TAMANO_MAXIMO_MB} MB.",
+        )
+
+    firma = contenido[:12]
+    firmas_validas = (
+        b"\x89PNG",
+        b"\xff\xd8\xff",
+        b"GIF8",
+        b"BM",
+        b"RIFF",
+        b"<?xml",
+        b"<svg",
+    )
+    if not any(firma.startswith(f) for f in firmas_validas):
+        raise HTTPException(
+            status_code=400,
+            detail="El archivo no es una imagen valida (cabecera no reconocida).",
+        )
+
+    nombre = f"{uuid.uuid4().hex}{ext}"
+    ruta = os.path.join(UPLOADS_DIR, nombre)
+    with open(ruta, "wb") as f:
+        f.write(contenido)
+    filename = f"uploads/{nombre}"
+    print(f"[SERVIDOR] Imagen subida: {filename} ({len(contenido)} bytes)", flush=True)
+    return {"filename": filename}
 
 
 @app.get("/preview-html")
