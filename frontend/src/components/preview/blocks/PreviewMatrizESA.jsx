@@ -6,12 +6,12 @@ export function PreviewMatrizESA({ capNum, tabNum, args }) {
     "",
     "ID",
     "Descripcion",
-    "Nec",
-    "Prio",
-    "Est",
-    "Cla",
-    "Ver",
-    "Fue",
+    "Necesidad",
+    "Prioridad",
+    "Estabilidad",
+    "Claridad",
+    "Verificabilidad",
+    "Fuente",
   ];
 
   return (
@@ -42,8 +42,7 @@ export function PreviewMatrizESA({ capNum, tabNum, args }) {
             <React.Fragment key={ci}>
               <tr>
                 <td style={tdEsaBold}>{ci + 1}.</td>
-                <td style={tdEsa}></td>
-                <td colSpan={7} style={tdCat}>
+                <td colSpan={8} style={tdCat}>
                   {cat.nombre || ""}
                 </td>
               </tr>

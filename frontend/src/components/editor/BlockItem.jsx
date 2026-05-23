@@ -24,6 +24,8 @@ import { DialogFigura } from "./dialogs/DialogFigura";
 import { DialogTabla } from "./dialogs/DialogTabla";
 import { DialogCasoUso } from "./dialogs/DialogCasoUso";
 import { DialogMatrizESA } from "./dialogs/DialogMatrizESA";
+import { DialogAPA } from "./dialogs/DialogAPA";
+import { DialogDefinicion } from "./dialogs/DialogDefinicion";
 
 const metaBloques = {
   capitulo: { icon: BookOpen, tag: "CAPITULO", color: "bg-blue-100 text-blue-700", Dialog: DialogCapitulo },
@@ -33,8 +35,8 @@ const metaBloques = {
   tabla_simple: { icon: Table, tag: "TABLA", color: "bg-orange-100 text-orange-700", Dialog: DialogTabla },
   caso_uso: { icon: FileSearch, tag: "CASO DE USO", color: "bg-purple-100 text-purple-700", Dialog: DialogCasoUso },
   matriz_ur_esa: { icon: BarChart3, tag: "MATRIZ ESA", color: "bg-red-100 text-red-700", Dialog: DialogMatrizESA },
-  apa: { icon: Book, tag: "BIBLIOGRAFIA", color: "bg-teal-100 text-teal-700", Dialog: null },
-  definicion: { icon: User, tag: "ACTOR", color: "bg-pink-100 text-pink-700", Dialog: null },
+  apa: { icon: Book, tag: "BIBLIOGRAFIA", color: "bg-teal-100 text-teal-700", Dialog: DialogAPA },
+  definicion: { icon: User, tag: "ACTOR", color: "bg-pink-100 text-pink-700", Dialog: DialogDefinicion },
 };
 
 function resumenBloque(bloque) {

@@ -4,6 +4,7 @@ import sys
 from collections import defaultdict
 
 ARCHIVO_ESTADO = "estado_documentos.json"
+ARCHIVO_PORTADAS = "portadas_documentos.json"
 
 
 def _cargar():
@@ -16,12 +17,28 @@ def _cargar():
     return defaultdict(list)
 
 
+def _cargar_portadas():
+    if os.path.exists(ARCHIVO_PORTADAS):
+        try:
+            with open(ARCHIVO_PORTADAS, "r", encoding="utf-8") as f:
+                return defaultdict(dict, json.load(f))
+        except Exception:
+            pass
+    return defaultdict(dict)
+
+
 def _guardar(estado):
     with open(ARCHIVO_ESTADO, "w", encoding="utf-8") as f:
         json.dump(dict(estado), f, ensure_ascii=False, indent=2)
 
 
+def _guardar_portadas(portadas):
+    with open(ARCHIVO_PORTADAS, "w", encoding="utf-8") as f:
+        json.dump(dict(portadas), f, ensure_ascii=False, indent=2)
+
+
 _estado = _cargar()
+_portadas = _cargar_portadas()
 _clientes = defaultdict(set)
 
 
@@ -32,6 +49,15 @@ def obtener_estado(documento_id: str) -> list:
 def establecer_estado(documento_id: str, elementos: list) -> None:
     _estado[documento_id] = elementos
     _guardar(_estado)
+
+
+def obtener_portada(documento_id: str) -> dict:
+    return _portadas.get(documento_id, {})
+
+
+def establecer_portada(documento_id: str, portada: dict) -> None:
+    _portadas[documento_id] = portada
+    _guardar_portadas(_portadas)
 
 
 def agregar_cliente(documento_id: str, websocket) -> None:

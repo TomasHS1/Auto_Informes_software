@@ -15,6 +15,8 @@ from estado_compartido import (
     remover_cliente,
     obtener_clientes,
     contar_clientes,
+    obtener_portada,
+    establecer_portada,
 )
 from informe import GeneradorInforme
 
@@ -137,6 +139,7 @@ async def compilar(payload: dict = Body(...)):
                 cap_num += 1
                 sub_num = tab_num = fig_num = 0
                 args["titulo"] = f"{cap_num}. {args.get('titulo','')}"
+                args.pop("fontSize", None)
                 gen.agregar_capitulo(**args)
             elif m == "subtitulo":
                 sub_num += 1
@@ -193,8 +196,9 @@ async def websocket_endpoint(websocket: WebSocket, documento_id: str):
 
     try:
         estado = obtener_estado(documento_id)
+        portada = obtener_portada(documento_id)
         print(f"[SERVIDOR] Enviando estado_completo a '{documento_id}': {len(estado)} elementos", flush=True)
-        await websocket.send_json({"tipo": "estado_completo", "elementos": estado})
+        await websocket.send_json({"tipo": "estado_completo", "elementos": estado, "portada": portada})
 
         while True:
             raw = await websocket.receive_text()
@@ -282,6 +286,18 @@ async def websocket_endpoint(websocket: WebSocket, documento_id: str):
                 }
                 otros = [c for c in obtener_clientes(documento_id) if c != websocket]
                 print(f"[SERVIDOR] Broadcast 'mover_bloque' a {len(otros)} clientes", flush=True)
+                for cliente in otros:
+                    await cliente.send_json(broadcast)
+
+            elif tipo == "actualizar_portada":
+                portada = data.get("portada", {})
+                establecer_portada(documento_id, portada)
+                print(f"[SERVIDOR] Portada actualizada para '{documento_id}'", flush=True)
+                broadcast = {
+                    "tipo": "actualizar_portada",
+                    "portada": portada,
+                }
+                otros = [c for c in obtener_clientes(documento_id) if c != websocket]
                 for cliente in otros:
                     await cliente.send_json(broadcast)
 

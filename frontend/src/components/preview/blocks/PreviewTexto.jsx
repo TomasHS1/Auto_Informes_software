@@ -1,6 +1,10 @@
 export function PreviewTexto({ args }) {
   return (
-    <p style={pStyle}>
+    <p style={{
+      ...pStyle,
+      fontWeight: args.negrita ? "bold" : "normal",
+      fontStyle: args.cursiva ? "italic" : "normal",
+    }}>
       {args.texto || ""}
     </p>
   );

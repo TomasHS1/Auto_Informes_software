@@ -80,7 +80,15 @@ export const useDocumentStore = create((set, get) => ({
     },
   ],
 
-  setPortada: (data) => set((state) => ({ portada: { ...state.portada, ...data } })),
+  setPortada: (data) => {
+    set((state) => ({ portada: { ...state.portada, ...data } }));
+    const { status, send } = wsStore.getState();
+    if (status === "connected") {
+      send({ tipo: "actualizar_portada", portada: get().portada });
+    }
+  },
+
+  _aplicarPortadaServidor: (data) => set((state) => ({ portada: { ...state.portada, ...data } })),
 
   addBloque: (metodo, args) => {
     const id = nuevoId();

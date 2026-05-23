@@ -17,6 +17,7 @@ import { DialogFigura } from "./dialogs/DialogFigura";
 import { DialogTabla } from "./dialogs/DialogTabla";
 import { DialogCasoUso } from "./dialogs/DialogCasoUso";
 import { DialogMatrizESA } from "./dialogs/DialogMatrizESA";
+import { DialogAPA } from "./dialogs/DialogAPA";
 
 const botones = [
   { label: "+ Capitulo", icon: BookOpen, metodo: "capitulo", Dialog: DialogCapitulo },
@@ -26,7 +27,7 @@ const botones = [
   { label: "+ Tabla", icon: Table, metodo: "tabla_simple", Dialog: DialogTabla },
   { label: "+ Caso de Uso", icon: FileSearch, metodo: "caso_uso", Dialog: DialogCasoUso },
   { label: "+ Matriz UR ESA", icon: BarChart3, metodo: "matriz_ur_esa", Dialog: DialogMatrizESA },
-  { label: "+ Bibliografia APA", icon: Book, metodo: "apa", Dialog: null },
+  { label: "+ Bibliografia APA", icon: Book, metodo: "apa", Dialog: DialogAPA },
 ];
 
 export function BlockToolbar() {
@@ -34,10 +35,6 @@ export function BlockToolbar() {
   const [dialogOpen, setDialogOpen] = useState(null);
 
   const handleAdd = (btn) => {
-    if (btn.metodo === "apa") {
-      addBloque("apa", { lista_referencias: ["Referencia APA..."] });
-      return;
-    }
     setDialogOpen(btn);
   };
 

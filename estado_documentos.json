@@ -207,6 +207,178 @@
         "subtitulo": "Requerimientos Funcionales ",
         "texto": "Aqui estan los RF matriz ESA"
       }
+    },
+    {
+      "metodo": "matriz_ur_esa",
+      "args": {
+        "categorias": [
+          {
+            "nombre": "",
+            "reqs": [
+              {
+                "tipo": "UR",
+                "id": "2.1",
+                "nombre": "dfdff",
+                "puntos": [
+                  "1",
+                  "1",
+                  "1",
+                  "11",
+                  "1",
+                  "1"
+                ],
+                "descripcion": "1"
+              },
+              {
+                "tipo": "UR",
+                "id": "2.2",
+                "nombre": "fcsff",
+                "puntos": [
+                  "2",
+                  "2",
+                  "2",
+                  "2",
+                  "2",
+                  "2"
+                ],
+                "descripcion": "3"
+              }
+            ]
+          },
+          {
+            "nombre": "",
+            "reqs": [
+              {
+                "tipo": "UR",
+                "id": "",
+                "nombre": "",
+                "puntos": [
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  ""
+                ],
+                "descripcion": ""
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "metodo": "matriz_ur_esa",
+      "args": {
+        "categorias": [
+          {
+            "nombre": "",
+            "reqs": [
+              {
+                "tipo": "UR",
+                "id": "1.1",
+                "nombre": "fdfdfdf",
+                "puntos": [
+                  "1",
+                  "2",
+                  "3",
+                  "3",
+                  "4",
+                  "5"
+                ],
+                "descripcion": "6"
+              },
+              {
+                "tipo": "UR",
+                "id": "2.2",
+                "nombre": "dffdf",
+                "puntos": [
+                  "3",
+                  "3",
+                  "3",
+                  "33",
+                  "3",
+                  "3"
+                ],
+                "descripcion": "3"
+              }
+            ]
+          },
+          {
+            "nombre": "",
+            "reqs": [
+              {
+                "tipo": "UR",
+                "id": "3.3",
+                "nombre": "edfa",
+                "puntos": [
+                  "||",
+                  "2",
+                  "2",
+                  "2",
+                  "22",
+                  "2"
+                ],
+                "descripcion": "2"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "metodo": "matriz_ur_esa",
+      "args": {
+        "categorias": [
+          {
+            "nombre": "",
+            "reqs": [
+              {
+                "tipo": "UR",
+                "id": "",
+                "nombre": "",
+                "puntos": [
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  ""
+                ],
+                "descripcion": ""
+              },
+              {
+                "tipo": "UR",
+                "id": "",
+                "nombre": "",
+                "puntos": [
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  ""
+                ],
+                "descripcion": ""
+              },
+              {
+                "tipo": "UR",
+                "id": "",
+                "nombre": "",
+                "puntos": [
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  ""
+                ],
+                "descripcion": ""
+              }
+            ]
+          }
+        ]
+      }
     }
   ]
 }

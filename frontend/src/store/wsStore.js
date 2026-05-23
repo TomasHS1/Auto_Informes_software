@@ -17,6 +17,20 @@ export const wsStore = create((set, get) => ({
 
     set({ status: "connecting", documentoId: docId, socket: null });
 
+    const store = useDocumentStore.getState();
+    store.reemplazarElementos([]);
+    store._aplicarPortadaServidor({
+      titulo: "",
+      grupo: "1",
+      logo: "logo_unab",
+      facultad: "",
+      curso: "",
+      autores: "",
+      profesor: "",
+      ciudad: "",
+      anio: "2026",
+    });
+
     try {
       const ws = new WebSocket(wsUrl(docId));
       set({ socket: ws });
@@ -34,8 +48,12 @@ export const wsStore = create((set, get) => ({
 
           if (data.tipo === "estado_completo") {
             const serverElements = data.elementos || [];
-            if (serverElements.length > 0) {
+            const serverPortada = data.portada || {};
+            if (serverElements.length > 0 || Object.keys(serverPortada).length > 0) {
               store.reemplazarElementos(serverElements);
+              if (Object.keys(serverPortada).length > 0) {
+                useDocumentStore.getState()._aplicarPortadaServidor(serverPortada);
+              }
             } else {
               const local = useDocumentStore.getState().elementos;
               if (local.length > 0) {
@@ -46,6 +64,10 @@ export const wsStore = create((set, get) => ({
                     bloque: { metodo: el.metodo, args: el.args },
                   });
                 });
+              }
+              const localPortada = useDocumentStore.getState().portada;
+              if (localPortada.titulo) {
+                get().send({ tipo: "actualizar_portada", portada: localPortada });
               }
             }
           } else if (data.tipo === "agregar_bloque") {
@@ -85,6 +107,8 @@ export const wsStore = create((set, get) => ({
               prev.splice(idx_destino, 0, item);
               useDocumentStore.setState({ elementos: prev });
             }
+          } else if (data.tipo === "actualizar_portada") {
+            useDocumentStore.getState()._aplicarPortadaServidor(data.portada);
           }
         } catch (e) {
           console.error("WS message error:", e);

@@ -1,6 +1,7 @@
 import { useDocumentStore } from "../../store/documentStore";
+import { wsStore } from "../../store/wsStore";
 
-export function PortadaForm() {
+export function PortadaForm({ onDocumentoIdChange }) {
   const portada = useDocumentStore((s) => s.portada);
   const setPortada = useDocumentStore((s) => s.setPortada);
 
@@ -28,6 +29,23 @@ export function PortadaForm() {
           rows={3}
           value={portada.autores}
           onChange={(e) => update("autores", e.target.value)}
+        />
+      </div>
+      <div>
+        <label className="block text-xs font-medium text-gray-600 mb-1">Documento ID</label>
+        <input
+          className="w-full px-2.5 py-1.5 border border-gray-300 rounded-md text-xs focus:outline-none focus:ring-2 focus:ring-[#2563EB]"
+          value={wsStore.getState().documentoId}
+          onChange={(e) => {
+            if (onDocumentoIdChange && e.target.value.trim()) {
+              onDocumentoIdChange(e.target.value.trim());
+            }
+          }}
+          onBlur={(e) => {
+            if (onDocumentoIdChange && e.target.value.trim()) {
+              onDocumentoIdChange(e.target.value.trim());
+            }
+          }}
         />
       </div>
     </div>

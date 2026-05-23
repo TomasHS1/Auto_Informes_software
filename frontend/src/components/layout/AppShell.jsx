@@ -3,7 +3,7 @@ import { BookOpen, Eye, Menu } from "lucide-react";
 import { TopBar } from "./TopBar";
 import { Sidebar } from "./Sidebar";
 
-export function AppShell({ children, currentPage, onNavigate, documentoId }) {
+export function AppShell({ children, currentPage, onNavigate, documentoId, onDocumentoIdChange }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const navItems = [
@@ -18,7 +18,7 @@ export function AppShell({ children, currentPage, onNavigate, documentoId }) {
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 fixed md:static z-30 w-[320px] h-full bg-white border-r border-gray-200 flex flex-col transition-transform duration-200 shrink-0`}
       >
-        <Sidebar currentPage={currentPage} onNavigate={onNavigate} documentoId={documentoId} />
+        <Sidebar currentPage={currentPage} onNavigate={onNavigate} documentoId={documentoId} onDocumentoIdChange={onDocumentoIdChange} />
       </aside>
 
       {sidebarOpen && (

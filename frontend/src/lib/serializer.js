@@ -25,8 +25,9 @@ export function serializarAHtml(elementos, portada = null) {
     if (m === "capitulo") {
       capNum++;
       subNum = tabNum = figNum = 0;
+      const capSize = args.fontSize || "12";
       partes.push(
-        `<h1 class="capitulo" style="font:12pt Arial;font-weight:bold;text-transform:uppercase;text-align:left;">${capNum}. ${(args.titulo || "").toUpperCase()}</h1>`
+        `<h1 class="capitulo" style="font:${capSize}pt Arial;font-weight:bold;text-transform:uppercase;text-align:left;">${capNum}. ${(args.titulo || "").toUpperCase()}</h1>`
       );
     } else if (m === "subtitulo") {
       subNum++;
@@ -34,8 +35,10 @@ export function serializarAHtml(elementos, portada = null) {
         `<h2 class="subtitulo" style="font:12pt Arial;font-weight:bold;margin-left:1.25cm;">${capNum}.${subNum} ${args.subtitulo || ""}</h2>`
       );
     } else if (m === "texto") {
+      const tw = args.negrita ? "font-weight:bold;" : "";
+      const ti = args.cursiva ? "font-style:italic;" : "";
       partes.push(
-        `<p style="font:12pt/1.5 Arial;text-align:justify;">${args.texto || ""}</p>`
+        `<p style="font:12pt/1.5 Arial;text-align:justify;${tw}${ti}">${args.texto || ""}</p>`
       );
     } else if (m === "figura") {
       figNum++;
@@ -95,11 +98,11 @@ export function serializarAHtml(elementos, portada = null) {
       const cats = args.categorias || [];
       let html = `<p style="font:9pt Arial;text-align:center;font-style:italic;">Tabla ${capNum}.${tabNum} "Requerimientos funcionales formato ESA".</p>`;
       html += `<table style="width:100%;border-collapse:collapse;font:8pt Arial;margin:12px 0;">`;
-      html += `<thead><tr>${["", "ID", "Descripcion", "Nec", "Prio", "Est", "Cla", "Ver", "Fue"]
+      html += `<thead><tr>${["", "ID", "Descripcion", "Necesidad", "Prioridad", "Estabilidad", "Claridad", "Verificabilidad", "Fuente"]
         .map((h) => `<th style="background:#D9D9D9;border:1px solid #999;padding:2px 3px;">${h}</th>`)
         .join("")}</tr></thead><tbody>`;
       cats.forEach((cat, ci) => {
-        html += `<tr><td style="font-weight:bold;">${ci + 1}.</td><td></td><td colspan="7" style="background:#F2F2F2;font-weight:bold;">${cat.nombre || ""}</td></tr>`;
+        html += `<tr><td style="font-weight:bold;">${ci + 1}.</td><td colspan="8" style="background:#F2F2F2;font-weight:bold;">${cat.nombre || ""}</td></tr>`;
         (cat.reqs || []).forEach((req) => {
           html += `<tr>${[
             req.tipo, req.id, req.nombre,

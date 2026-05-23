@@ -1,6 +1,7 @@
 export function PreviewCapitulo({ capNum, args }) {
+  const size = args.fontSize || "12";
   return (
-    <h1 style={h1Style}>
+    <h1 style={{ ...h1Style, fontSize: `${size}pt` }}>
       {capNum}. {(args.titulo || "").toUpperCase()}
     </h1>
   );

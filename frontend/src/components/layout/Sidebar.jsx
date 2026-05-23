@@ -1,7 +1,7 @@
 import { PortadaForm } from "../portada/PortadaForm";
 import { BlockToolbar } from "../editor/BlockToolbar";
 
-export function Sidebar({ currentPage, onNavigate, documentoId }) {
+export function Sidebar({ currentPage, onNavigate, documentoId, onDocumentoIdChange }) {
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <div className="px-4 py-3 border-b border-gray-200">
@@ -14,7 +14,7 @@ export function Sidebar({ currentPage, onNavigate, documentoId }) {
       </div>
 
       <div className="flex-1 overflow-y-auto">
-        <PortadaForm />
+        <PortadaForm onDocumentoIdChange={onDocumentoIdChange} />
       </div>
 
       <div className="p-3 border-t border-gray-200 bg-gray-50">

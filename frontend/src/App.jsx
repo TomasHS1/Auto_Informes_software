@@ -6,10 +6,16 @@ import { useWebSocket } from "./hooks/useWebSocket";
 
 export default function App() {
   const [page, setPage] = useState("editor");
-  const { status } = useWebSocket("proyecto1");
+  const [documentoId, setDocumentoId] = useState("proyecto1");
+  const { status } = useWebSocket(documentoId);
 
   return (
-    <AppShell currentPage={page} onNavigate={setPage} documentoId="proyecto1">
+    <AppShell
+      currentPage={page}
+      onNavigate={setPage}
+      documentoId={documentoId}
+      onDocumentoIdChange={setDocumentoId}
+    >
       {page === "editor" ? <EditorPage /> : <PreviewPage />}
     </AppShell>
   );
